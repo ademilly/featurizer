@@ -2,6 +2,7 @@ from inspect import getmembers, isfunction
 
 import functions
 
+
 class Featurizer(object):
 
     def __init__(self, var_dict={}):
