@@ -8,5 +8,5 @@ if __name__ == '__main__':
         i for i in range(1, 10)
     ]
 
-    fsvc = featurize.FeaturizerService()
+    fsvc = featurize.Featurizer()
     print fsvc.featurize(var=var)
