@@ -1,4 +1,6 @@
+import numpy as np
 from inspect import getmembers, isfunction
+from sklearn.naive_bayes import GaussianNB
 
 import functions
 
@@ -11,6 +13,7 @@ class Featurizer(object):
             _ for _ in getmembers(functions) if isfunction(_[1])
         ]
         self.var_dict = {}
+        self.clf = GaussianNB()
 
     def featurize(self, var):
 
@@ -19,3 +22,11 @@ class Featurizer(object):
         ]
 
         return new_X
+
+    def supervised_featurization(self, X, y):
+
+        for new_X in (
+            [f[1](x) for x in X] for f in self.func_list
+        ):
+            self.clf.fit(np.array(new_X).reshape(-1, 1), y)
+            print self.clf.score(np.array(new_X).reshape(-1, 1), y)

@@ -24,3 +24,7 @@ def the_min(x):
 def the_max(x):
 
     return max(x)
+
+def the_norm(x):
+
+    return np.array(x).dot(np.array(x))
