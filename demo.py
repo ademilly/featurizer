@@ -1,38 +1,42 @@
-import numpy as np
-import random
+from sklearn.naive_bayes import GaussianNB
+import matplotlib.pyplot as plt
+
+from random import shuffle
 
 import featurize
+import sample_generator
 
 
 if __name__ == '__main__':
 
     print "Let's featurize"
 
-    r, theta = np.random.normal(size=1000), np.random.uniform(
-        low=0.0,
-        high=2.0 * np.pi
-    )
-    x_0, y_0 = r * np.cos(theta), r * np.sin(theta)
-    X_0 = list(zip(x_0, y_0))
-    t_0 = [0 for _ in x_0]
+    quadratic_gen = sample_generator.Quadratic()
 
-    r, theta = np.random.normal(loc=2.0, size=1000), np.random.uniform(
-        low=0.0,
-        high=2.0 * np.pi
-    )
-    x_1, y_1 = r * np.cos(theta), r * np.sin(theta)
-    X_1 = list(zip(x_1, y_1))
-    t_1 = [1 for _ in x_0]
+    N = 1000
+    X_0 = quadratic_gen.generate(N, radius=5, width=2)
+    X_1 = quadratic_gen.generate(N, radius=10, width=2)
 
-    X = X_0 + X_1
-    y = t_0 + t_1
+    show = False
 
-    data = zip(X, y)
-    random.shuffle(data)
+    plt.scatter([_[0] for _ in X_0], [_[1] for _ in X_0], color='blue')
+    plt.scatter([_[0] for _ in X_1], [_[1] for _ in X_1], color='red')
 
-    X[:], y[:] = zip(*data)
-
-    print X[0], y[0]
+    if show:
+        plt.show()
 
     fsvc = featurize.Featurizer()
+
+    pop_0 = [(0, _) for _ in X_0]
+    pop_1 = [(1, _) for _ in X_1]
+
+    pop = pop_0 + pop_1
+    shuffle(pop)
+
+    X, y = [_[1] for _ in pop], [_[0] for _ in pop]
+
+    clf = GaussianNB()
+    clf.fit(X, y)
+    print clf.score(X, y)
+
     fsvc.supervised_featurization(X, y)

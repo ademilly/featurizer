@@ -25,8 +25,10 @@ class Featurizer(object):
 
     def supervised_featurization(self, X, y):
 
-        for new_X in (
-            [f[1](x) for x in X] for f in self.func_list
+        for new_X, function_name in (
+            ([f[1](x) for x in X], f[0]) for f in self.func_list
         ):
             self.clf.fit(np.array(new_X).reshape(-1, 1), y)
-            print self.clf.score(np.array(new_X).reshape(-1, 1), y)
+            print function_name, self.clf.score(
+                np.array(new_X).reshape(-1, 1), y
+            )
